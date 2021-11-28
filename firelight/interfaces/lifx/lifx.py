@@ -1,5 +1,5 @@
 from lifxlan import LifxLAN
-from lightDevice import LightSystem, LightDevice
+from interfaces import LightSystem, LightDevice
 
 
 class LifxSystem(LightSystem):

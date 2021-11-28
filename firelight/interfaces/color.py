@@ -1,7 +1,7 @@
-import abc
+from abc import ABC, abstractmethod
 
 
-class Color(metaclass=abc.ABCMeta):
+class Color(ABC):
     """Interface that represents color objects."""
     @classmethod
     def __subclasshook__(cls, subclass):
@@ -10,7 +10,16 @@ class Color(metaclass=abc.ABCMeta):
                 and hasattr(subclass, 'to_rgb')
                 and callable(subclass.to_rgb))
 
-    @abc.abstractmethod
+    @abstractmethod
+    def values(self):
+        """Return the values of this color.
+
+        :rtype: tuple
+
+        """
+        raise NotImplementedError
+
+    @abstractmethod
     def to_hls(self):
         """Return this color in HLS color space.
 
@@ -20,7 +29,7 @@ class Color(metaclass=abc.ABCMeta):
         """
         raise NotImplementedError
 
-    @abc.abstractmethod
+    @abstractmethod
     def to_rgb(self):
         """Return this color in RGB color space.
 
@@ -42,7 +51,15 @@ class RGBColor(Color):
 
     def __init__(self, r: int, g: int, b: int):
         """Constructor method"""
-        self._rgb = [r, g, b]
+        self._rgb = (r, g, b)
+
+    def values(self):
+        """Return the values of this color.
+
+        :rtype: Tuple
+
+        """
+        return self._rgb
 
     def to_hls(self):
         """Convert RGB color to the HLS color space.
@@ -98,7 +115,15 @@ class HLSColor(Color):
 
     def __init__(self, h: float, l: float, s: float):
         """Constructor method"""
-        self._hls = [h, l, s]
+        self._hls = (h, l, s)
+
+    def values(self):
+        """Return the values of this color.
+
+        :rtype: Tuple
+
+        """
+        return self._hls
 
     def to_hls(self):
         """Return this object.
