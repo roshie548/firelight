@@ -35,6 +35,14 @@ class ScreenProcessor():
         return im
 
     def _get_dominant_colors(self, im):
+        """Return the dominant colors of the image.
+
+        :param im: 2D numpy array representing the screenshot.
+        :return: A k x 3 array of k centroids, where the ith element represents
+                 the coordinates for the ith centroid.
+        :rtype: 2D array
+
+        """
         # Get clusters
         #   codes = centroids (i.e. color groups)
         codes, dist = scipy.cluster.vq.kmeans(im, self._num_clusters)
@@ -47,10 +55,17 @@ class ScreenProcessor():
         else:
             peaks = codes
 
-        return peaks, codes
+        return peaks
 
     def get_accent_color(self, im):
-        peaks, codes = self._get_dominant_colors(im)
+        """Return the main accent color of the screenshot.
+
+        :param im: 2D numpy array representing the screenshot.
+        :return: Main accent color
+        :rtype: HLSColor
+
+        """
+        peaks = self._get_dominant_colors(im)
         rgbs = [RGBColor(*color) for color in np.around(peaks).astype(int)]
         hlss = [color.to_hls() for color in rgbs]
 
@@ -60,4 +75,4 @@ class ScreenProcessor():
         colorfulness_values = np.array([colorfulness(x) for x in hlss])
         hls = hlss[np.argmax(colorfulness_values)]
 
-        return hls.values()
+        return hls

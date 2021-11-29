@@ -1,4 +1,3 @@
-import numpy as np
 from firelight.interfaces.color import HLSColor
 
 
@@ -18,11 +17,3 @@ def colorfulness(color: HLSColor):
     if l <= 0.25:
         return 0
     return s * l
-
-
-def grab_and_compress_screen(sct):
-    im = np.array(sct.grab(sct.monitors[1]))
-    im = im[::35, ::40, :3][:, :, ::-1]
-    shape = im.shape
-    im = im.reshape(np.product(shape[:2]), shape[2]).astype(float)
-    return im
