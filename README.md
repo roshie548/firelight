@@ -5,6 +5,8 @@
 ## About Firelight
 [Firelight](https://github.com/roshie548/firelight) is an open source bias lighting program which syncs up colored lights to the contents of your screen or TV, providing an immersive experience.
 
+![Demo Firelight](doc/firelight-demo.gif)
+
 ## Installation
 To install:
 ```
