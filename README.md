@@ -1,6 +1,13 @@
+<div align="center">
+
 ![Firelight](doc/firelight-dark.png#gh-dark-mode-only)
 ![Firelight](doc/firelight-light.png#gh-light-mode-only)
 
+[![Version](https://shields.io/badge/firelight-v0.0.2-blue)](https://pypi.org/project/firelight-lighting/)
+[![Release](https://shields.io/badge/status-prerelease-orange)](https://pypi.org/project/firelight-lighting/)
+[![Downloads](https://pepy.tech/badge/firelight-lighting)](https://pepy.tech/project/firelight-lighting)
+
+</div>
 
 ## About Firelight
 [Firelight](https://github.com/roshie548/firelight) is an open source bias lighting program which syncs up colored lights to the contents of your screen or TV, providing an immersive experience.

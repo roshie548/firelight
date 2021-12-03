@@ -4,9 +4,10 @@ import scipy.cluster
 from mss import mss
 from firelight.interfaces.color import RGBColor
 from firelight.processing.image import colorfulness
+# from matplotlib import pyplot as PLT
 
 
-NUM_CLUSTERS = 16
+NUM_CLUSTERS = 12
 FILTER_LOW_OCCURRENCE_COLORS = True
 
 
@@ -30,6 +31,8 @@ class ScreenProcessor():
         """
         im = np.array(self._sct.grab(self._monitor))
         im = im[::35, ::40, :3][:, :, ::-1]
+        # PLT.imshow(im)
+        # PLT.show()
         shape = im.shape
         im = im.reshape(np.product(shape[:2]), shape[2]).astype(float)
         return im
