@@ -30,9 +30,11 @@ class ScreenProcessor():
 
         """
         im = np.array(self._sct.grab(self._monitor))
+
+        # TODO: Use to this version - faster
+        # numpy.flip(frame[:, :, :3], 2).tobytes()
+
         im = im[::35, ::40, :3][:, :, ::-1]
-        # PLT.imshow(im)
-        # PLT.show()
         shape = im.shape
         im = im.reshape(np.product(shape[:2]), shape[2]).astype(float)
         return im
