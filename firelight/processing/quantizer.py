@@ -2,6 +2,10 @@ from __future__ import annotations
 import numpy as np
 from heapq import heappop, heappush, heapify
 
+# TODO: Experiment with using an eigenvalue as a stopping condition rather than
+# a set number of clusters
+NUM_CLUSTERS = 5
+
 
 class Tree():
     def __init__(self, image):
@@ -11,12 +15,20 @@ class Tree():
         self._classes = np.ones((height, width))
         self._num_classes = 1
 
-        # Use max heap?
-        # self._queue =
-        pass
+        # Use a priority queue
+        self._queue = []
+        heappush(self._queue, (1, root))
 
     def find_dominant_colors(self):
-        pass
+        while self._num_classes < NUM_CLUSTERS:
+            _, node = heappop(self._queue)
+            left_child, right_child = node.partition(self._num_classes + 1)
+
+            heappush(self._queue, (-1 * left_child.get_priority(), left_child))
+            heappush(self._queue, (-1 * right_child.get_priority(), right_child))
+
+            self._num_classes += 1
+        return [node._mean for _, node in self._queue]
 
 
 class Node():
@@ -28,19 +40,23 @@ class Node():
         self._mean = colors.mean(axis=0)
         self._cov = np.cov(colors.T)
         self._class_id = class_id
+        self._max_eigenvalue, self.principal_axis = self.get_statistics()
 
     def get_statistics(self):
-        u, s, vh = np.linalg.svd(self._colors)
-        singular_value = s[0]
-        principal_axis = vh[0]
-        score = u[:, 0] @ singular_value
-        return singular_value, principal_axis, score
+        eig_vals, eig_vecs = np.linalg.eig(self._cov)
+        index = eig_vals.argmax()
+
+        return eig_vals[index], eig_vecs[eig_vals.argmax()]
 
     def partition(self, next_id):
-        _, principal_axis, score = self.get_statistics()
-        threshold = self._mean @ principal_axis
+        threshold = self._mean @ self.principal_axis
+        score = self._colors @ self.principal_axis
+
         rightColors = self._colors[score > threshold]
         leftColors = self._colors[score <= threshold]
         rightNode = Node(rightColors, next_id)
         leftNode = Node(leftColors, self._class_id)
         return leftNode, rightNode
+
+    def get_priority(self):
+        return self._max_eigenvalue
