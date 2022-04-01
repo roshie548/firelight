@@ -68,8 +68,10 @@ def main():
         np.random.seed(seed=1337)
 
         im = processor.get_downsampled_screenshot()
-        hls = processor.get_accent_color(im)
-        if not hls:
+        try:
+            hls = processor.get_accent_color(im)
+            if not hls:
+                continue
+            system.set_color(hls)
+        except:
             continue
-
-        system.set_color(hls)

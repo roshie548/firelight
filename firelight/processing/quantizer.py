@@ -1,10 +1,8 @@
 from __future__ import annotations
 import numpy as np
-from heapq import heappop, heappush, heapify
+from heapq import heappop, heappush
 
-# TODO: Experiment with using an eigenvalue as a stopping condition rather than
-# a set number of clusters
-NUM_CLUSTERS = 5
+NUM_CLUSTERS = 12
 
 
 class Tree():
@@ -20,7 +18,8 @@ class Tree():
         heappush(self._queue, (1, root))
 
     def find_dominant_colors(self):
-        while self._num_classes < NUM_CLUSTERS:
+        keep_going = True
+        while keep_going:
             _, node = heappop(self._queue)
             left_child, right_child = node.partition(self._num_classes + 1)
 
@@ -28,6 +27,10 @@ class Tree():
             heappush(self._queue, (-1 * right_child.get_priority(), right_child))
 
             self._num_classes += 1
+            keep_going = True in [
+                node.get_priority() > 3000 for priority, node in self._queue] and self._num_classes < NUM_CLUSTERS
+
+        print([node._max_eigenvalue for _, node in self._queue])
         return [node._mean for _, node in self._queue]
 
 

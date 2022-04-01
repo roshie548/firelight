@@ -4,20 +4,19 @@ import scipy.cluster
 from mss import mss
 from firelight.interfaces.color import RGBColor
 from firelight.processing.image import colorfulness
+from firelight.processing.quantizer import Tree
 # from matplotlib import pyplot as PLT
 
 
-NUM_CLUSTERS = 12
 FILTER_LOW_OCCURRENCE_COLORS = True
+DOWNSAMPLED_SCREENSHOT_NUM_PIXELS = 20000
 
 
 class ScreenProcessor():
     def __init__(
             self,
             monitor=1,
-            num_clusters=NUM_CLUSTERS,
             filter_low_occurrence_colors=FILTER_LOW_OCCURRENCE_COLORS):
-        self._num_clusters = num_clusters
         self._filter_low_occurrence_colors = filter_low_occurrence_colors
         self._sct = mss()
         self._monitor = self._sct.monitors[1]
@@ -29,12 +28,21 @@ class ScreenProcessor():
         :rtype: numpy array
 
         """
-        im = np.array(self._sct.grab(self._monitor))
+        im = np.array(self._sct.grab(self._monitor))  # shape: h * w * 3
 
-        # TODO: Use to this version - faster
-        # numpy.flip(frame[:, :, :3], 2).tobytes()
+        # Want an image size of ~20,000 pixels (experimentally determined)
+        # Let size of the original screenshot (im) be w_0 x h_0
+        # Let w, h be the size of the downsampled screenshot
+        # Constraints:
+        # (1) w * h = 2000
+        # (2) w_0 = r * w, h_0 = r * h
+        # Solving for r:
+        # r = sqt((w_o * h_0) / 20,000)
+        h_0, w_0, _ = im.shape
+        r = np.rint(
+            np.sqrt(h_0 * w_0 / DOWNSAMPLED_SCREENSHOT_NUM_PIXELS)).astype(int)
 
-        im = im[::35, ::40, :3][:, :, ::-1]
+        im = np.flip(im[::r, ::r, :3], 2)
         shape = im.shape
         im = im.reshape(np.product(shape[:2]), shape[2]).astype(float)
         return im
@@ -49,13 +57,14 @@ class ScreenProcessor():
 
         """
         # Get clusters
-        #   codes = centroids (i.e. color groups)
-        codes, dist = scipy.cluster.vq.kmeans(im, self._num_clusters)
+        tree = Tree(im)
+        centroids = tree.find_dominant_colors()
+        codes, dist = scipy.cluster.vq.kmeans(im, centroids)
         vecs, dist = scipy.cluster.vq.vq(im, codes)  # assign codes
         counts, bins = np.histogram(vecs, len(codes))    # count occurrences
 
-        if self._filter_low_occurrence_colors and len(codes) >= 8:
-            indexes_max = np.argpartition(counts, -8)[8:]
+        if self._filter_low_occurrence_colors and len(codes) >= 5:
+            indexes_max = np.argpartition(counts, -5)[5:]
             peaks = codes[indexes_max]
         else:
             peaks = codes

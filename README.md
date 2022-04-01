@@ -3,8 +3,7 @@
 ![Firelight](doc/firelight-dark.png#gh-dark-mode-only)
 ![Firelight](doc/firelight-light.png#gh-light-mode-only)
 
-[![Version](https://shields.io/badge/firelight-v0.0.2-blue)](https://pypi.org/project/firelight-lighting/)
-[![Release](https://shields.io/badge/status-prerelease-orange)](https://pypi.org/project/firelight-lighting/)
+[![Version](https://shields.io/badge/firelight-v1.0.0-blue)](https://pypi.org/project/firelight-lighting/)
 [![Downloads](https://pepy.tech/badge/firelight-lighting)](https://pepy.tech/project/firelight-lighting)
 
 </div>
@@ -36,3 +35,10 @@ Firelight will automatically discover the lights connected to your WiFi network 
 
 ## Asking for help or requesting features
 If you need some help or would like more features added, please open an issue.
+Also, feel free to submit pull requests for any features you'd like to add yourself.
+
+## TODO features
+These are features/improvements that I would like to tackle next:
+
+- Add Philips Hue compatibility
+- Investigate interactions with scenes that include many bright, shifting colors that cause rapid flashing or color changes
