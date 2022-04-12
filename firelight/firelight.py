@@ -4,9 +4,10 @@ import sys
 
 from firelight.processing.screen_processor import ScreenProcessor
 from firelight.interfaces.lifx.lifx import LifxSystem
+from firelight.interfaces.openrgb.openrgb import OpenRGBSystem
 
 
-light_systems = {"lifx": LifxSystem}
+light_systems = {"lifx": LifxSystem, "openrgb": OpenRGBSystem}
 
 
 def get_system(system):
@@ -56,7 +57,10 @@ def main():
         system = args[0]
 
     system = get_system(system)()
-    system = group_option(system)
+
+    if not (len(args) > 1 and args[1] == 'all'):
+        system = group_option(system)
+
     processor = ScreenProcessor()
 
     print("\nAll good to go! Sit back and enjoy the show :)")
@@ -73,5 +77,6 @@ def main():
             if not hls:
                 continue
             system.set_color(hls)
-        except:
+        except Exception as e:
+            print(e)
             continue
