@@ -20,6 +20,7 @@ class ScreenProcessor():
         self._filter_low_occurrence_colors = filter_low_occurrence_colors
         self._sct = mss()
         self._monitor = self._sct.monitors[1]
+        self._r = None
 
     def get_downsampled_screenshot(self):
         """Compute a downsampled 2D array representing a screenshot.
@@ -38,9 +39,12 @@ class ScreenProcessor():
         # (2) w_0 = r * w, h_0 = r * h
         # Solving for r:
         # r = sqt((w_o * h_0) / 20,000)
-        h_0, w_0, _ = im.shape
-        r = np.rint(
-            np.sqrt(h_0 * w_0 / DOWNSAMPLED_SCREENSHOT_NUM_PIXELS)).astype(int)
+        if not self._r:
+            h_0, w_0, _ = im.shape
+            r = np.rint(
+                np.sqrt(h_0 * w_0 / DOWNSAMPLED_SCREENSHOT_NUM_PIXELS)).astype(int)
+        else:
+            r = self._r
 
         im = np.flip(im[::r, ::r, :3], 2)
         shape = im.shape

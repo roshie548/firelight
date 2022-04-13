@@ -27,10 +27,13 @@ class Tree():
             heappush(self._queue, (-1 * right_child.get_priority(), right_child))
 
             self._num_classes += 1
-            keep_going = True in [
-                node.get_priority() > 3000 for priority, node in self._queue] and self._num_classes < NUM_CLUSTERS
 
-        print([node._max_eigenvalue for _, node in self._queue])
+            # Keep going until all nodes have an eigenvalue less than 3000.
+            # Since the heap invariant is always maintained, we can simply
+            # check the first node in the priority queue
+            keep_going = self._queue[0][0] < -3000 \
+                and self._num_classes < NUM_CLUSTERS
+
         return [node._mean for _, node in self._queue]
 
 

@@ -33,6 +33,8 @@ firelight lifx
 ```
 Firelight will automatically discover the lights connected to your WiFi network and will start syncing their colors to your screen. Please make sure that the lights are on to see the effect. You can exit the application at any time by pressing `Ctrl + C`.
 
+For best results, use Firelight when watching full screen movies. Firelight does not work well with general web browsing, as it will try to pick interesting colors on your screen. This could mean lots of jitter when using for general use. I may consider adding a general use mode in the future.
+
 ## Asking for help or requesting features
 If you need some help or would like more features added, please open an issue.
 Also, feel free to submit pull requests for any features you'd like to add yourself.
