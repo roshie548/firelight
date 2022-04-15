@@ -29,7 +29,8 @@ class OpenRGBSystem(LightSystem):
         lights = self._openrgb.devices
         for light in lights:
             self._lights[light.id] = light
-            group = list(group_names.keys())[list(group_names.values()).index(light.type)]
+            light.set_custom_mode()
+            group = [group_name for group_name, enum in group_names.items() if enum == light.type][0]
             if group not in self._groups:
                 self._groups.append(group)
         print(self._groups)
@@ -71,7 +72,7 @@ class OpenRGBGroup(LightGroup):
 
     def turn_on(self):
         for device in _group:
-            device.off()
+            device._set_device_color(utils.RGBColor(255, 255, 255))
 
     def turn_off(self):
         for device in _group:
@@ -103,7 +104,7 @@ class OpenRGBLight(LightDevice):
         self._transition_time = transition_time
 
     def turn_on(self):
-        self._light.off()
+        self._light._set_device_color(utils.RGBColor(255, 255, 255))
 
     def turn_off(self):
         self._light.off()

@@ -77,6 +77,5 @@ def main():
             if not hls:
                 continue
             system.set_color(hls)
-        except Exception as e:
-            print(e)
+        except:
             continue
